@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./js/app.js"></script>
+  <title>Workorders</title>
+</head>
+<body>
+  <table>
+    {{>header}}
+    <h1>Workorders</h1>
+    <thead>
+      <td>Device</td>
+      <td>Diagnosis</td>
+      <td>Technician</td>
+      <td>Parts</td>
+    </thead>
+    <tbody>
+      <tr>
+        <td>iPhone 8</td>
+        <td>Broken screen.</td>
+        <td>Nathan</td>
+        <td>iPhone 8 Screen</td>
+      </tr>
+      <tr>
+        <td>OnePlus 8 Pro</td>
+        <td>Battery replacement.</td>
+        <td>Terry</td>
+        <td>OnePlus 8 Pro Battery</td>
+      </tr>
+      <tr>
+        <td>iPad</td>
+        <td>Broken Screen.</td>
+        <td>Terry</td>
+        <td>iPad Screen</td>
+      </tr>
+      <tr>
+        <td>HP Laptop</td>
+        <td>RAM upgrade.</td>
+        <td>Dylan</td>
+        <td>2x8 SoDIMM DDR4 Memory Sticks</td>
+      </tr>
+      <tr>
+        <td>iPhone 12</td>
+        <td>Dirt stuck in speaker.</td>
+        <td>Nathan</td>
+        <td>N/A</td>
+      </tr>
+    </tbody>
+  </table>
+  {{>footer}}
+</body>
+</html>

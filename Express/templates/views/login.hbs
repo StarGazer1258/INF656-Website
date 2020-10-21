@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./js/app.js"></script>
+  <title>Document</title>
+</head>
+<body>
+  {{>header}}
+  <h1>Log In</h1>
+  <form action="/workorders" method="GET">
+    <label for="username">Username:</label><br />
+    <input type="text" name="username" id="username"><br />
+    <label for="password">Password:</label><br />
+    <input type="password" name="password" id="password"><br />
+    <input type="submit" value="Login">
+  </form>
+  <p><i>Note: this is a mock login form, no data is sent from this page and no validation is done on any data entered.</i></p>
+  {{>footer}}
+</body>
+</html>
