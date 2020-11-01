@@ -33,11 +33,11 @@ app.get("/login", (req, res) => {
   res.render("login")
 })
 
-app.get("/workorders", (req, res) => {
-  res.render("workorders")
+app.get("/workOrders", (req, res) => {
+  res.render("workOrders")
 })
 
-app.get("/getworkorders", (req, res) => {
+app.get("/getworkOrders", (req, res) => {
   res.send([
     {
       device: "iPhone 8",

@@ -1,0 +1,128 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="go-back-modal-title">Go Back?</h5>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to go back without saving?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss(); navigateByUrl('/workOrders')">Go back without saving</button>
+  </div>
+</ng-template>
+<div class="container">
+  <div class="row my-5 d-print-none">
+    <div class="col">
+      <button class="btn btn-secondary" (click)=openModal(content)>Go Back</button>
+    </div>
+    <div class="col">
+      <h2>Work Order</h2>
+    </div>
+    <div><button class="btn btn-success" (click)="saveWorkOrder(); navigateByUrl('/workOrders')">Save</button></div>
+  </div>
+  <div class="row">
+    <div class="col-3ß d-flex">
+      <img src="https://via.placeholder.com/110?text=Company Logo" alt="Company Logo">
+      <span id="company-info" class="mx-3">
+        <div id="company-name">Company Name</div>
+        <div>Company Address</div>
+        <div>City, State, Zip</div>
+        <div>Phone Number</div>
+      </span>
+    </div>
+    <div class="col"></div>
+    <div class="col-3 p-2">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Date</span></div>
+        <input type="text" class="form-control" disabled [(ngModel)]="workOrder.date">
+      </div><br>
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">REF#</span></div>
+        <input type="text" class="form-control" disabled [(ngModel)]="workOrder.reference">
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="p-2 col-8">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Customer Name</span></div>
+        <input type="text" class="form-control" [(ngModel)]="workOrder.customerName">
+      </div>
+    </div>
+    <div class="p-2 col-4">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Phone #</span></div>
+        <input type="text" class="form-control" [(ngModel)]="workOrder.phoneNumber">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="p-2 col-5">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Device</span></div>
+        <input type="text" class="form-control" [(ngModel)]="workOrder.device">
+      </div>
+    </div>
+    <div class="p-2 col-7">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Device Password</span></div>
+        <input type="text" class="form-control" [(ngModel)]="workOrder.devicePassword">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="p-2 col">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Problem</span></div>
+        <textarea class="form-control wo-text-area" id="problem-input" [(ngModel)]="workOrder.problem"></textarea>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="p-2 col">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Technician</span></div>
+        <input type="text" class="form-control" [(ngModel)]="workOrder.technician">
+      </div>
+    </div>
+    <div class="p-2 col">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Labor Type</span></div>
+        <input type="text" class="form-control" [(ngModel)]="workOrder.laborType">
+      </div>
+    </div>
+    <div class="p-2 col">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Labor Hours</span></div>
+        <input type="number" class="form-control" [(ngModel)]="workOrder.laborHours">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="p-2 col-12">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Diagnosis</span></div>
+        <textarea class="form-control wo-text-area" id="diagnosis-input" [(ngModel)]="workOrder.diagnosis"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="p-2 col-12">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Notes</span></div>
+        <textarea class="form-control wo-text-area" id="notes-input" [(ngModel)]="workOrder.notes"></textarea>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="p-2 col-12">
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text">Parts</span></div>
+        <textarea class="form-control wo-text-area" id="parts-input" [(ngModel)]="workOrder.parts"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<script>$('#go-back-modal').modal()</script>

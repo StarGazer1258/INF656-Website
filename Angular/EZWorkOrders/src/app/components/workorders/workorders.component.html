@@ -1,0 +1,41 @@
+<div class="container mt-5">
+  <div class="row">
+    <h1 class="col-md">Work Orders</h1>
+    <div><button class="btn btn-success" (click)="navigateByUrl('/workOrders/new')">New Work Order</button></div>
+  </div>
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Date/Time</th>
+        <th scope="col">Customer Name</th>
+        <th scope="col">Device</th>
+        <th scope="col">Problem</th>
+        <th scope="col">Diagnosis</th>
+      </tr>
+      
+    </thead>
+    <tbody>
+      <tr *ngFor="let workOrder of workOrders" (click)="navigateByUrl('/workOrders/details?ref=' + workOrder.reference)">
+        <td>{{workOrder.date.toLocaleString()}}</td>
+        <td>{{workOrder.customerName}}</td>
+        <td>{{workOrder.device}}</td>
+        <td>{{workOrder.problem}}</td>
+        <td>{{workOrder.diagnosis}}</td>
+      </tr>
+      <tr *ngIf="workOrders.length === 0 && !loading">
+        <td></td>
+        <td></td>
+        <td>No Work Orders Found!</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr *ngIf="loading">
+        <td></td>
+        <td></td>
+        <td>Loading...</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
