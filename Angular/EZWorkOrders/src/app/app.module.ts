@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
+import { HttpClientModule } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './components/app/app.component'
@@ -30,7 +31,8 @@ import { AccountService } from './services/account.service'
     AppRoutingModule,
     NgbModule,
     CommonModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   providers: [WorkOrderService, AccountService],
   bootstrap: [AppComponent]

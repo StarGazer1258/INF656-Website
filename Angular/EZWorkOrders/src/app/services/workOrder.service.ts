@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+import { HttpClient } from '@angular/common/http'
 import { Observable, of } from 'rxjs'
 import { WorkOrder } from '../models/WorkOrder'
 import { EXAMPLE_WORKORDERS } from '../exampleData'
@@ -10,12 +11,13 @@ export class WorkOrderService {
 
   workOrders: WorkOrder[]
 
-  constructor() {
+  constructor(private http: HttpClient) {
     this.workOrders = EXAMPLE_WORKORDERS
+    
   }
 
   getWorkOrders(): Observable<WorkOrder[]> {
-    return of(this.workOrders)
+    return this.http.get<WorkOrder[]>('http://localhost:3000/api/workorders/get')
   }
 
   saveWorkOrder(workOrder: WorkOrder): void {
