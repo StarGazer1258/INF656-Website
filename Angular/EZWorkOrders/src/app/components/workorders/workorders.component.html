@@ -15,7 +15,7 @@
       
     </thead>
     <tbody>
-      <tr *ngFor="let workOrder of workOrders" (click)="navigateByUrl('/workOrders/details?ref=' + workOrder.reference)">
+      <tr *ngFor="let workOrder of workOrders" (click)="navigateByUrl('/workOrders/details?id=' + workOrder._id)">
         <td>{{workOrder.date.toLocaleString()}}</td>
         <td>{{workOrder.customerName}}</td>
         <td>{{workOrder.device}}</td>

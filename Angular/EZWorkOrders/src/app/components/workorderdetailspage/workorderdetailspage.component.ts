@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core'
 import { WorkOrder } from '../../models/WorkOrder'
+import { Count } from '../../models/Count'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap'
 import { Router, ActivatedRoute, ParamMap } from '@angular/router'
 import { WorkOrderService } from 'src/app/services/workOrder.service'
-import { AccountService } from 'src/app/services/account.service'
 
 @Component({
   selector: 'workorder-details-page',
@@ -12,44 +12,63 @@ import { AccountService } from 'src/app/services/account.service'
 })
 export class WorkOrderDetailsPage implements OnInit {
 
-  workOrders: WorkOrder[]
   workOrder: WorkOrder
   ref: string
+  isNew: Boolean
 
   constructor(private modalService: NgbModal, public router: Router, private route: ActivatedRoute, private workOrderService: WorkOrderService) { }
   
   ngOnInit(): void {
+    this.workOrder = {
+      date: new Date(),
+      reference: 0,
+      
+      customerName: null,
+      phoneNumber: null,
+      device: null,
+      devicePassword: null,
+      problem: null,
+
+      technician: null,
+      laborType: null,
+      laborHours: 0,
+      diagnosis: null,
+      notes: null,
+      parts: null
+    }
+
     this.route.queryParams.subscribe(params => {
-      this.ref = params['ref']
-      this.workOrderService.getWorkOrders().subscribe(data => {
-        this.workOrders = data
-      })
-      if(this.ref !== undefined) {
-          this.workOrder = this.workOrders.find((val) => val.reference === this.ref)
+      if(params['id']) {
+        this.workOrderService.getWorkOrder(params['id']).subscribe(data => this.workOrder = data)
+        this.isNew = false
       } else {
-        this.workOrder = {
-          date: new Date(),
-          reference: (this.workOrders.length + 1).toString(),
+        this.workOrderService.workOrderCount().subscribe(count => {
+          this.workOrder = {
+            date: new Date(),
+            reference: count.count + 1,
+            
+            customerName: null,
+            phoneNumber: null,
+            device: null,
+            devicePassword: null,
+            problem: null,
 
-          customerName: "",
-          phoneNumber: "",
-          device: "",
-          devicePassword: "",
-          problem: "",
-
-          technician: "",
-          laborType: "",
-          laborHours: 0,
-          diagnosis: "",
-          notes: "",
-          parts: ""
-        }
+            technician: null,
+            laborType: null,
+            laborHours: 0,
+            diagnosis: null,
+            notes: null,
+            parts: null
+          }
+        })
+        
+        this.isNew = true
       }
     })
   }
 
   saveWorkOrder() {
-    this.workOrderService.saveWorkOrder(this.workOrder)
+    this.workOrderService.saveWorkOrder(this.workOrder, this.isNew)
   }
 
   navigateByUrl(url: string) {
