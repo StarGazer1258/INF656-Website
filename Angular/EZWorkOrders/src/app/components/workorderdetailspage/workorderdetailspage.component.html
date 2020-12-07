@@ -1,4 +1,4 @@
-<ng-template #content let-modal>
+<ng-template #goback let-modal>
   <div class="modal-header">
     <h5 class="modal-title" id="go-back-modal-title">Go Back?</h5>
   </div>
@@ -10,20 +10,33 @@
     <button type="button" class="btn btn-danger" (click)="modal.dismiss(); navigateByUrl('/workOrders')">Go back without saving</button>
   </div>
 </ng-template>
+<ng-template #delete let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="go-back-modal-title">Go Back?</h5>
+  </div>
+  <div class="modal-body">
+    <p>Are you sure you want to delete this Work Order?<br /><b>This cannot be undone.</b></p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-danger" (click)="modal.dismiss(); deleteWorkOrder()">Delete</button>
+  </div>
+</ng-template>
 <div class="container">
   <div class="row my-5 d-print-none">
     <div class="col">
-      <button class="btn btn-secondary" (click)=openModal(content)>Go Back</button>
+      <button class="btn btn-secondary" (click)=openModal(goback)>Go Back</button>
     </div>
     <div class="col">
       <h2>Work Order</h2>
     </div>
-    <div><button class="btn btn-success" (click)="saveWorkOrder(); navigateByUrl('/workOrders')">Save</button></div>
+    <div><button class="btn btn-danger mx-2" (click)="openModal(delete)">Delete</button></div>
+    <div><button class="btn btn-success mx-2" (click)="saveWorkOrder()">Save</button></div>
   </div>
   <div class="row">
-    <div class="col-3ß d-flex">
+    <div id="company-info" class="d-flex">
       <img src="https://via.placeholder.com/110?text=Company Logo" alt="Company Logo">
-      <span id="company-info" class="mx-3">
+      <span class="mx-3">
         <div id="company-name">Company Name</div>
         <div>Company Address</div>
         <div>City, State, Zip</div>

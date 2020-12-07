@@ -1,0 +1,23 @@
+{
+  "name": "inf656-website",
+  "version": "1.0.0",
+  "description": "Final Project website for INF656",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently 'mongod --dbpath=\"mongodb\"' 'cd Angular/EZWorkOrders && ng serve' 'wait-on tcp:27017 && cd Express && node .'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StarGazer1258/INF656-Website.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StarGazer1258/INF656-Website/issues"
+  },
+  "homepage": "https://github.com/StarGazer1258/INF656-Website#readme",
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "wait-on": "^5.2.0"
+  }
+}

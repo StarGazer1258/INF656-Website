@@ -14,6 +14,8 @@ export class RegisterPage {
   password: string
   confirmPassword: string
 
+  regerror: boolean = false
+
   @ViewChild('userForm') form: any
 
   constructor(public router: Router, private accountService: AccountService) { }
@@ -22,16 +24,18 @@ export class RegisterPage {
     this.router.navigateByUrl(url)
   }
 
-  setLoggedIn(loggedIn) {
-    this.accountService.setLoggedIn(loggedIn)
-  }
-
   onSubmit({ valid }: { valid: boolean }) {
     if (!valid) {
       console.log('Form is not Valid');
     } else {
-      // Push user to database
-      this.form.reset();
+      this.accountService.registerUser({ companyName: this.companyName, email: this.emailAddress, password: this.password })
+        .subscribe(res => {
+          this.navigateByUrl('/login')
+        }, err => {
+          console.error(err)
+          this.regerror = true
+          this.form.reset()
+        })
     }
   }
 }

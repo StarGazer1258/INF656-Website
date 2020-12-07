@@ -7,7 +7,7 @@
       <li class="nav-item" *ngIf="loggedIn"><a href="#" class="nav-link" routerLink="/workOrders" routerLinkActive="active">Work Orders</a></li>
     </ul>
     <button class="btn btn-primary" [routerLink]="['/login']" *ngIf="!loggedIn">Log In</button>
-    <button class="btn btn-danger" [routerLink]="['/']" *ngIf="loggedIn" (click)="setLoggedIn(false)">Log Out</button>
+    <button class="btn btn-danger" [routerLink]="['/']" *ngIf="loggedIn" (click)="logout()">Log Out</button>
   </div>
 </nav>
 <router-outlet></router-outlet>

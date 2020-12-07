@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { WorkOrder } from '../../models/WorkOrder'
 import { WorkOrderService } from '../../services/workOrder.service'
-import { AccountService } from 'src/app/services/account.service'
 
 @Component({
   selector: 'workOrders-page',

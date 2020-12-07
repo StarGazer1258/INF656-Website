@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Observable, of } from 'rxjs'
+import { Observable } from 'rxjs'
 import { WorkOrder } from '../models/WorkOrder'
 import { Count } from '../models/Count'
 
@@ -29,5 +29,9 @@ export class WorkOrderService {
     } else {
       return this.http.put<WorkOrder>('http://localhost:3000/api/workorders/update/'+ workOrder._id, workOrder).subscribe()
     }
+  }
+
+  deleteWorkOrder(workOrder: WorkOrder) {
+    return this.http.delete<WorkOrder>('http://localhost:3000/api/workorders/delete/' + workOrder._id).subscribe()
   }
 }

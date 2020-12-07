@@ -1,28 +1,28 @@
-const path = require("path");
-const express = require("express");
-const hbs = require("hbs");
+const path = require('path')
+const express = require('express')
+const hbs = require('hbs')
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
 
 require('./db/mongoose')
 
-const User = require('./db/models/user');
-const WorkOrder = require('./db/models/workorder');
-const { query } = require("express");
-const { send } = require("process");
-const { count } = require("console");
+const User = require('./db/models/user')
+const WorkOrder = require('./db/models/workorder')
 
-const PORT = 3000;
-const app = express();
+const PORT = 3000
+const app = express()
 
-const publicDirectoryPath = path.join(__dirname, "../public");
-const viewsPath = path.join(__dirname, "../templates/views/");
-const partialsPath = path.join(__dirname, "../templates/partials/");
+const publicDirectoryPath = path.join(__dirname, '../public')
+const viewsPath = path.join(__dirname, '../templates/views/')
+const partialsPath = path.join(__dirname, '../templates/partials/')
 
-app.set("view engine", "hbs");
-app.set("views", viewsPath);
-hbs.registerPartials(partialsPath);
+const SECRET_KEY = 'InF-656_FiNaL'
 
-app.use(express.json());
+app.set('view engine', 'hbs')
+app.set('views', viewsPath)
+hbs.registerPartials(partialsPath)
+
+app.use(express.json())
 
 const corsOptions = {
   origin: '*',
@@ -30,34 +30,62 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
+function authenticate(req, res, next) {
+  if (req.headers.authorization === undefined || req.headers.authorization.split(' ')[0] !== 'Bearer') {
+    res.sendStatus(401)
+    return
+  }
+  try {
+    let verifyTokenResult = jwt.verify(req.headers.authorization.split(' ')[1], SECRET_KEY, (err, decode) => decode !== undefined ?  decode : err)
+
+     if (verifyTokenResult instanceof Error) return res.sendStatus(401)
+     next()
+  } catch (err) {
+    res.sendStatus(401)
+  }
+}
+
 app.post('/api/users/register', (req, res) => {
   let newUser = new User({
-    username: req.query.username,
-    password: req.query.password
+    companyName: req.body.companyName,
+    email: req.body.email,
+    password: req.body.password
   })
   
   newUser.save((err) => {
+    console.error(err)
     if(err) return res.sendStatus(400)
-    return res.sendStatus(201)
+    return res.send({ status: 200 })
   })
 })
 
-app.delete('/api/users/unregister/:username', (req, res) => {
-  User.findOne({ username: req.params.username }, (err, user) => {
+app.delete('/api/users/unregister', (req, res) => {
+  User.findOne({ email: req.body.email }, async (err, user) => {
     if(err) return res.sendStatus(404)
 
-    console.log(user)
-    
-    user.checkPassword(req.query.password, async (err, same) => {
+    await User.deleteOne({ _id: user._id }, err => {
       if(err) return res.sendStatus(500)
 
-      if(same) {
-        await User.deleteOne({ _id: user._id }, err => {
-          console.error(err)
-          if(err) return res.sendStatus(500)
+      return res.sendStatus(200)
+    })
+  })
+})
 
-          return res.sendStatus(200)
+app.post('/api/users/login', (req, res) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
+    if(err) return res.sendStatus(404)
+    
+    user.checkPassword(req.body.password, (err, same) => {
+      if(err) return res.sendStatus(500)
+
+      delete user._doc.password
+
+      if(same) {
+        const expiresIn = 24 * 60 * 60
+        const accessToken = jwt.sign({ id: user.id }, SECRET_KEY, {
+          expiresIn: expiresIn
         })
+        return res.send({ 'user': user, 'token': accessToken, 'expires_in': expiresIn })
       }
 
       return res.sendStatus(401)
@@ -65,24 +93,7 @@ app.delete('/api/users/unregister/:username', (req, res) => {
   })
 })
 
-app.post('/api/users/authenticate', (req, res) => {
-  User.findOne({ username: req.query.username }, (err, user) => {
-    if(err) return res.sendStatus(404)
-
-    console.log(user)
-    
-    user.checkPassword(req.query.password, (err, same) => {
-      if(err) return res.sendStatus(500)
-
-      delete user._doc.password
-
-      if(same) return res.send(user)
-      return res.sendStatus(401)
-    })
-  })
-})
-
-app.post('/api/workOrders/create', (req, res) => {
+app.post('/api/workOrders/create', authenticate, (req, res) => {
   let newWorkOrder = new WorkOrder({
     date: req.body.date,
     reference: req.body.reference,
@@ -101,20 +112,20 @@ app.post('/api/workOrders/create', (req, res) => {
     parts: req.body.parts
   })
 
-  newWorkOrder.save((err) => {
+  newWorkOrder.save(err => {
     if(err) return res.sendStatus(400)
     return res.sendStatus(201)
   })
 })
 
-app.get('/api/workorders/get', (req, res) => {
+app.get('/api/workorders/get', authenticate, (req, res) => {
   WorkOrder.find((err, result) => {
     if(err) return res.sendStatus(500)
     return res.send(result)
   })
 })
 
-app.get('/api/workorders/get/:id', (req, res) => {
+app.get('/api/workorders/get/:id', authenticate, (req, res) => {
   WorkOrder.findOne({ _id: req.params.id }, (err, workOrder) => {
     if(err) return res.sendStatus(400)
 
@@ -122,7 +133,7 @@ app.get('/api/workorders/get/:id', (req, res) => {
   })
 })
 
-app.put('/api/workorders/update/:id', (req, res) => {
+app.put('/api/workorders/update/:id', authenticate, (req, res) => {
   
   WorkOrder.findOne({ _id: req.params.id }, (err, workOrder) => {
     if(err) return res.sendStatus(400)
@@ -143,7 +154,7 @@ app.put('/api/workorders/update/:id', (req, res) => {
     workOrder.parts = req.body.parts || workOrder.parts
 
     WorkOrder.updateOne({ _id: req.params.id }, workOrder, (err, raw) => {
-      if(err) { res.sendStatus(400); console.error(err); return }
+      if(err) return res.sendStatus(400)
       return res.sendStatus(200)
     })
   })
@@ -151,14 +162,14 @@ app.put('/api/workorders/update/:id', (req, res) => {
   
 })
 
-app.delete('/api/workorders/delete/:id', (req, res) => {
+app.delete('/api/workorders/delete/:id', authenticate, (req, res) => {
   WorkOrder.deleteOne({ _id: req.params.id }, (err) => {
     if(err) return res.sendStatus(400)
     return res.sendStatus(200)
   })
 })
 
-app.get('/api/workorders/count', (req, res) => {
+app.get('/api/workorders/count', authenticate, (req, res) => {
   WorkOrder.countDocuments((err, count) => {
     if(err) return res.sendStatus(500)
 
@@ -166,15 +177,15 @@ app.get('/api/workorders/count', (req, res) => {
   })
 })
 
-app.use(express.static(publicDirectoryPath));
+app.use(express.static(publicDirectoryPath))
 
-app.get("*", (req, res) => {
-  res.render("fourohfour");
-});
+app.get('*', (req, res) => {
+  res.render('fourohfour')
+})
 
-app.post("*", (req, res) => {
-  res.render("fourohfour");
-});
+app.post('*', (req, res) => {
+  res.render('fourohfour')
+})
 
-app.listen(PORT);
-console.log(`Server is listening on port ${PORT}`);
+app.listen(PORT)
+console.log(`Server is listening on port ${PORT}`)

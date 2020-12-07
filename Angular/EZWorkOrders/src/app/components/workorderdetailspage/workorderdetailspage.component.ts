@@ -45,7 +45,7 @@ export class WorkOrderDetailsPage implements OnInit {
         this.workOrderService.workOrderCount().subscribe(count => {
           this.workOrder = {
             date: new Date(),
-            reference: count.count + 1,
+            reference: Date.now(),
             
             customerName: null,
             phoneNumber: null,
@@ -67,15 +67,21 @@ export class WorkOrderDetailsPage implements OnInit {
     })
   }
 
+  deleteWorkOrder() {
+    this.workOrderService.deleteWorkOrder(this.workOrder)
+    this.navigateByUrl('/workOrders')
+  }
+
   saveWorkOrder() {
     this.workOrderService.saveWorkOrder(this.workOrder, this.isNew)
+    this.navigateByUrl('/workOrders')
   }
 
   navigateByUrl(url: string) {
     this.router.navigateByUrl(url)
   }
 
-  openModal(content) {
-    this.modalService.open(content, {ariaLabelledBy: 'go-back-modal-title'})
+  openModal(modal) {
+    this.modalService.open(modal, {ariaLabelledBy: 'go-back-modal-title'})
   }
 }

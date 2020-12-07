@@ -2,7 +2,10 @@
   <h1>Log In</h1><br />
   <div class="row">
     <div class="col col-4">
-      <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+      <form #userForm="ngForm" (ngSubmit)="$event.preventDefault(); onSubmit(userForm)">
+        <div class="alert alert-danger" [ngClass]="{'d-none': !loginerror}" role="alert">
+          Invalid username or password! Please try again.
+        </div>
         <div class="form-group">
           <label for="emailInput">Email Address</label>
           <input type="email" name="emailInput" id="emailInput" class="form-control" [(ngModel)]="emailAddress"  [ngClass]="{'is-invalid': emailadd.errors && emailadd.touched}" #emailadd="ngModel" required>
@@ -13,7 +16,7 @@
           <input type="password" name="passwordInput" id="passwordInput" class="form-control" [(ngModel)]="password" [ngClass]="{'is-invalid': pass.errors && pass.touched}" #pass="ngModel" required>
           <div [hidden]="!pass.errors?.required" class="invalid-feedback">Please enter a valid password</div>
         </div>
-        <button class="btn btn-primary" [disabled]="!userForm.form.valid" (click)="setLoggedIn(true); navigateByUrl('/workOrders')">Submit</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!userForm.form.valid">Submit</button>
       </form>
       <p class="mt-3">Don't have an account? <a class="link" (click)="navigateByUrl('/register')">Register for free!</a></p>
     </div>

@@ -12,6 +12,8 @@ export class LoginPage {
   emailAddress: string
   password: string
 
+  loginerror: boolean = false
+
   @ViewChild('userForm') form: any
 
   constructor(public router: Router, private accountService: AccountService) { }
@@ -20,16 +22,20 @@ export class LoginPage {
     this.router.navigateByUrl(url)
   }
 
-  setLoggedIn(loggedIn) {
-    this.accountService.setLoggedIn(loggedIn)
-  }
-
   onSubmit({ valid }: { valid: boolean }) {
     if (!valid) {
       console.log('Form is not Valid');
     } else {
-      // Authenticate user
-      this.form.reset();
+      this.accountService.login({ email: this.emailAddress, password: this.password })
+        .subscribe(res => {
+          localStorage.setItem('token', res.token)
+          this.accountService.setLoggedIn(true)
+          this.navigateByUrl('/workOrders')
+        }, err => {
+          this.loginerror = true
+          this.form.reset()
+        })
+      
     }
   }
 }

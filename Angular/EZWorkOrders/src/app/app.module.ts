@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './components/app/app.component'
@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common'
 import { WorkOrderService } from './services/workOrder.service'
 import { FormsModule } from '@angular/forms'
 import { AccountService } from './services/account.service'
+import { AuthInterceptor } from './auth.interceptor'
 
 @NgModule({
   declarations: [
@@ -34,7 +35,11 @@ import { AccountService } from './services/account.service'
     FormsModule,
     HttpClientModule
   ],
-  providers: [WorkOrderService, AccountService],
+  providers: [WorkOrderService, AccountService, {
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
