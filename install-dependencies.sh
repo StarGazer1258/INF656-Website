@@ -1,0 +1,1 @@
+npm install && cd Angular/EZWorkOrders && npm install && cd ../Express && npm install
