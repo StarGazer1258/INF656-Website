@@ -105,3 +105,4 @@ dist
 
 # Contents of DB directory
 mongodb/*
+!mongodb/.keep
